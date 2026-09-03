@@ -1,0 +1,1 @@
+This is an explaantion of the history and nature of this directory. The history of this directory began in a time before stories began, when humanity first discovered fire. The natural consequence of this was a development of technologies and enhanced agricultural methods leading to our first forays into other realms.
