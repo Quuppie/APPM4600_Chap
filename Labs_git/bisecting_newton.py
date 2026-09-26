@@ -7,7 +7,6 @@ Created on Thu Sep 17 10:39:34 2026
 """
 import numpy as np
 import matplotlib.pyplot as plt
-import sympy
 
 def driver():
 
@@ -22,40 +21,17 @@ def driver():
     # print('the error message reads:',ier)
     # print('f(astar) =', f(astar))
     
-    #x = sympy.Symbol('x')
-
-    f = lambda x: x**9 - 45*x**8 + 900*x**7 - 10500*x**6 + 78750*x**5 - 393750*x**4 + 1312500*x**3 - 2812500*x**2 + 3515625*x - 1953125
+    f = lambda x: x**3+x-4
     fprime = lambda x: 3*x**2+1
     fdbprime = lambda x: 6*x
     
-    a = 4.82
-    b = 5.2
+    a = 1
+    b = 4
 
-    tol = 10**-4
+    tol = 10**-3
     Nmax = 50
- 
- 
-    [astarbi,ierbi,countbi] = bisection(f,a,b,tol)
-    print('Bisection')
-    print('the approximate root is',astarbi)
-    print(f'Bisection took {countbi} steps')
-    print('the error message reads:',ierbi)
-    print('f(astar) =', f(astarbi))
-    
-    #just Newton
-    [p,pstar,info,it] = newton(f,fprime,b,tol,Nmax)
-    print('Newton')
-    print('the approximate root is',pstar)
-    print(f'Newton took {it} steps')
-    print('the error message reads:',info)
-    print('f(astar) =', f(pstar))
-    
-    #using both
-    
-    [astar,ier, count] = binewtonsection(f,a,b,fprime,fdbprime,tol,Nmax)
-    print('Bisection and Newton combo')
+    [astar,ier] = bisection(f,a,b,fprime,fdbprime,tol,Nmax)
     print('the approximate root is',astar)
-    print(f'The combo took {count} steps')
     print('the error message reads:',ier)
     print('f(astar) =', f(astar))
 #%% Problem 5
@@ -92,8 +68,7 @@ def newton(f,fp,p0,tol,Nmax):
   info = 1
   return [p,pstar,info,it]
 
-
-def bisection(f,a,b,tol):
+def bisection(f,a,b,fprime,fdbprime,tol,Nmax):
     
 #    Inputs:
 #     f,a,b       - function and endpoints of initial interval
@@ -109,84 +84,30 @@ def bisection(f,a,b,tol):
 
     fa = f(a)
     fb = f(b);
-    count=0
     if (fa*fb>0):
        ier = 1
        astar = a
-       return [astar, ier,count]
+       return [astar, ier]
 
 #   verify end points are not a root 
     if (fa == 0):
       astar = a
       ier =0
-      return [astar, ier,count]
+      return [astar, ier]
 
     if (fb ==0):
       astar = b
       ier = 0
-      return [astar, ier,count]
-
-    d = 0.5*(a+b)
-    while (abs(fa-fb) >= tol):
-      fd = f(d)
-      if (fd ==0):
-        astar = d
-        ier = 0
-        return [astar, ier, count]
-      if (fa*fd<0):
-         b = d
-         astar = d
-      else: 
-        a = d
-        fa = fd
-      d = 0.5*(a+b)
-      count = count +1
-      astar = d
-#      print('abs(d-a) = ', abs(d-a))
-
-    ier = 0
-    return [astar, ier, count]
-
-def binewtonsection(f,a,b,fprime,fdbprime,tol,Nmax):
-    
-#    Inputs:
-#     f,a,b       - function and endpoints of initial interval
-#      tol  - bisection stops when interval length < tol
-
-#    Returns:
-#      astar - approximation of root
-#      ier   - error message
-#            - ier = 1 => Failed
-#            - ier = 0 == success
-
-#     first verify there is a root we can find in the interval 
+      return [astar, ier]
 
     count = 0
-    fa = f(a)
-    fb = f(b);
-    if (fa*fb>0):
-       ier = 1
-       astar = a
-       return [astar, ier, count]
-
-#   verify end points are not a root 
-    if (fa == 0):
-      astar = a
-      ier =0
-      return [astar, ier,count]
-
-    if (fb ==0):
-      astar = b
-      ier = 0
-      return [astar, ier, count]
-
     d = 0.5*(a+b)
     while (f(d)*fdbprime(d)/fprime(d)**2 > 1):
       fd = f(d)
       if (fd ==0):
         astar = d
         ier = 0
-        return [astar, ier, count]
+        return [astar, ier]
       if (fa*fd<0):
          b = d
       else: 
@@ -196,9 +117,8 @@ def binewtonsection(f,a,b,fprime,fdbprime,tol,Nmax):
       count = count +1
 #      print('abs(d-a) = ', abs(d-a))
     [p,pstar,info,it] = newton(f,fprime,d,tol,Nmax)
-    count = count+it
     astar = pstar
     ier = 0
-    return [astar, ier, ]
+    return [astar, ier]
 
 driver()
