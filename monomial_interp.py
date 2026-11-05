@@ -26,12 +26,13 @@ import numpy as np
 import numpy.linalg as la
 from numpy.linalg import inv
 from numpy.linalg import norm
+import matplotlib.pyplot as plt
 
 def driver(): 
 
-    f = lambda x: 2*x +4
+    f = lambda x: 1/(1+(10*x)**2)
     
-    N = 2
+    N = 110
     a = 0
     b = 1
     
@@ -57,16 +58,33 @@ def driver():
 #    print('coef = ', coef)
 
 # No validate the code
-    Neval = 100    
-    xeval = np.linspace(a,b,Neval+1)
+    Neval = 30
+    # xeval = np.linspace(a,b,Neval+1)
+    xeval = []
+    for i in range(1,N):
+        z = (-1 + (i-1)*(2/(N-1)))
+        xeval.append(z)
+        
+    xeval = np.array(xeval)
     yeval = eval_monomial(xeval,coef,N,Neval)
 
 # exact function
     yex = f(xeval)
     
-    err =  norm(yex-yeval) 
-    print('err = ', err)
+    # err =  abs(yex-yeval) 
+    # print('err = ', err)
     
+    plt.plot(xint,yint)
+    plt.plot(xeval,yeval,"ro")
+    # plt.xlim(([0,1]))
+    # plt.ylim(0,4)
+    plt.show()
+    
+    # plt.plot(xeval,err)
+    # plt.title("error")
+    # # plt.xlim(([0,1]))
+    # # plt.ylim(0,4)
+    # plt.show()
     return
 
 def  eval_monomial(xeval,coef,N,Neval):

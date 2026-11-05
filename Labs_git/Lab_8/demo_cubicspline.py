@@ -61,7 +61,7 @@ def driver():
     
     ''' evaluate f at the evaluation points'''
     fex = f(xeval)
-        
+    
     nerr = norm(fex-yeval)
     print('nerr = ', nerr)
     

@@ -34,7 +34,7 @@ from numpy.linalg import inv
 
 def driver():
     
-    f = lambda x: np.exp(x)
+    f = lambda x: 1/(1+(10*x**2))
     a = 0
     b = 1
     
@@ -43,8 +43,8 @@ def driver():
     xeval =  np.linspace(a,b,Neval)
     
     ''' number of intervals'''
-    Nint = 10
-    
+    Nint = 12
+
     '''evaluate the linear spline'''
     yeval = eval_lin_spline(xeval,Neval,a,b,f,Nint)
     
@@ -64,7 +64,6 @@ def driver():
     plt.show()
 
     
-
 def  eval_lin_spline(xeval,Neval,a,b,f,Nint):
 
     '''create the intervals for piecewise approximations'''
@@ -77,22 +76,22 @@ def  eval_lin_spline(xeval,Neval,a,b,f,Nint):
         '''find indices of xeval in interval (xint(jint),xint(jint+1))'''
         '''let ind denote the indices in the intervals'''
         '''let n denote the length of ind'''
-        ind = np.where(xeval >= xint[jint] & xeval<=xint[jint+1],xeval) 
+        ind = np.where((xeval >= xint[jint]) & (xeval <= xint[jint+1]))[0]
+        n = len(ind)
         '''temporarily store your info for creating a line in the interval of 
          interest'''
         a1= xint[jint]
         fa1 = f(a1)
         b1 = xint[jint+1]
         fb1 = f(b1)
-        n = 5
         
         for kk in range(n):
            '''use your line evaluator to evaluate the lines at each of the points 
            in the interval'''
            '''yeval(ind(kk)) = call your line evaluator at xeval(ind(kk)) with 
            the points (a1,fa1) and (b1,fb1)'''
-           alpha = xeval[ind(k)]
-           yeval[kk] = lineMaker(a1,b1,fa1,fb1,alpha)
+           alpha = xeval[ind[kk]]
+           yeval[ind[kk]] = lineMaker(a1,b1,fa1,fb1,alpha)
        
     return (yeval)
 
